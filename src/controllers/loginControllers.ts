@@ -13,12 +13,14 @@ const addUser = async (req: Request, res: Response) => {
 
   await connection.execute(query);
 
+  console.log("Tentativa de adicionar user")
   return res.status(201).json({ "Conteúdo registrado": "Ok" });
 };
 
 export const loginUser = async (req: Request, res: Response) => {
   const password = req.body.password;
   const login = req.body.login;
+
 
   const userInfo: any = await connection.execute(
     "SELECT password FROM testenode.user WHERE login = ?",
@@ -29,7 +31,7 @@ export const loginUser = async (req: Request, res: Response) => {
   if (userInfo[0][0].password === md5(password)) {
     return res.status(200).send({ Logado: true });
   } else {
-    return res.status(200).send({ Logado: false });
+    return res.status(203).send({ Logado: false });
   }
 };
 

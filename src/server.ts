@@ -1,14 +1,19 @@
 import "dotenv/config";
-import connection from "./db";
+
+var cors = require('cors')
+
 
 import Express from "express";
 import router from "./router";
 
 const app = Express();
+app.use(cors())
 
 // Middlewares
 app.use(Express.json());
+
 app.use("/api/", router);
+
 
 // Verificando se conectou no MySQL
 
