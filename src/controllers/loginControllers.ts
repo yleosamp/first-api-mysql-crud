@@ -21,17 +21,23 @@ export const loginUser = async (req: Request, res: Response) => {
   const password = req.body.password;
   const login = req.body.login;
 
+  try {
+    const userInfo: any = await connection.execute(
+      "SELECT password FROM testenode.user WHERE login = ?",
+      [login]
+    );
 
-  const userInfo: any = await connection.execute(
-    "SELECT password FROM testenode.user WHERE login = ?",
-    [login]
-  );
+    const profile: any = await connection.execute("SELECT * FROM testenode.user WHERE login = ?", [login])
 
-  console.log(userInfo[0][0].password);
-  if (userInfo[0][0].password === md5(password)) {
-    return res.status(200).send({ Logado: true });
-  } else {
-    return res.status(203).send({ Logado: false });
+    if(userInfo){
+      if (userInfo[0][0].password === md5(password)) {
+        return res.status(200).send({ Logado: profile });
+      } else {
+        return res.status(203).send({ Logado: false });
+      }
+    }
+  } catch (error) {
+    return res.status(203).send({ Logado: "Usuário não encontrado!" })
   }
 };
 
